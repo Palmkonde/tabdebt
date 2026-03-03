@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('url');
             $table->string('description')->nullable();
             $table->enum('rating', ['bad', 'average', 'good'])->default('average');
-            $table->foreignId('group_id');
+            $table->foreignId('group_id')->nullable();
             
             $table->timestamps();
         });
