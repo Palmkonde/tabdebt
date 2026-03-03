@@ -12,4 +12,8 @@ class Group extends Model
     public function websites() {
         return $this->hasMany(Website::class); 
     }
+    
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
