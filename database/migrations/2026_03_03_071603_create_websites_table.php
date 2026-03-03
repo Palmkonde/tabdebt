@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('websites', function (Blueprint $table) {
             $table->id();
             
-            $table->string('title');
+            $table->string('name');
             $table->string('url');
             $table->string('description')->nullable();
             $table->enum('rating', ['bad', 'average', 'good'])->default('average');
