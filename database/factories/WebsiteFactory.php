@@ -17,7 +17,7 @@ class WebsiteFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->title(),
+            'name' => $this->faker->word(2, true),
             'url' => $this->faker->url(),
             'description' => $this->faker->sentence(),
             'rating' => $this->faker->randomElement(['bad', 'average', 'good'])

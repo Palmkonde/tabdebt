@@ -17,7 +17,7 @@ class GroupFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->word(2, true),
             'description' => $this->faker->sentence(),
             'user_id' => $this->faker->numberBetween(1, 10),
         ];
