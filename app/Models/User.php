@@ -32,6 +32,10 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    
+    public function group() {
+        return $this->hasMany(Group::class, 'user_id', 'id');
+    }
 
     /**
      * Get the attributes that should be cast.
