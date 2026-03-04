@@ -6,3 +6,25 @@
     <x-status countNum="{{ $websiteCount }}" label="Websites" />
     <x-status countNum="{{ $groupCount }}" label="Groups" />
 </section>
+
+<section>
+    <div>
+        <h2> Recent Added Websites </h2>
+        <p><a href="#">View all</a></p>
+    <div>
+    
+    <div>
+        @foreach($recentWebsites as $website)
+            <div>
+                <h4> {{ $website->name }} </h4>
+                <p> {{ $website->url }} </p>
+                <p> {{ $website->rating }} </p>
+                <div>
+                    @foreach ($website->tags as $tag)
+                        <span> {{ $tag->name }} </span>
+                    @endforeach
+                <div>
+            </div>
+        @endforeach 
+    </div>
+</section>
