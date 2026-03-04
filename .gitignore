@@ -25,3 +25,4 @@ Thumbs.db
 
 .devcontainer/
 shell.nix
+tmp/
