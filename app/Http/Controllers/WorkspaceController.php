@@ -8,6 +8,8 @@ class WorkspaceController extends Controller
 {
     public function index()
     {
-        return view('workspace.index');
+        return view('workspace.index', [
+            'name' => auth()->user()->name
+        ]);
     }
 }
