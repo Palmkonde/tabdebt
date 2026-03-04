@@ -20,13 +20,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $palm =User::create([
             'name' => 'Palm',
             'email' => 'palm@example.com',
             'password' => Hash::make('password')
         ]);
-
+        
         $tags = Tag::factory()->count(20)->create();
+
+        Group::factory()
+            ->count(3)
+            ->for($palm)
+            ->hasAttached($tags->random(3))
+            ->has(
+                Website::factory()
+                    ->hasAttached($tags->random(2))
+                    ->count(5)
+            )
+            ->create();
+
         User::factory(10)
             ->has(
                 Group::factory()

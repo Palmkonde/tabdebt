@@ -12,6 +12,7 @@ class WorkspaceController extends Controller
     public function index()
     {
         $user = auth()->user();
+
         $tags = Tag::whereHas('groups', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->orWhereHas('websites', function ($query) use ($user) {
