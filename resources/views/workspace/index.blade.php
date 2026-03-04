@@ -28,3 +28,29 @@
         @endforeach 
     </div>
 </section>
+
+<section>
+    <h2> Groups </h2>
+    <p><a href="#"> View all </a></p>
+    
+    <ul>
+        @foreach($groups as $group)
+            <li>
+                <span>{{ $group->name }} </span>
+                <span>({{ $group->websites_count }})</span>
+            </li>
+        @endforeach
+    </ul>
+</section>
+
+<section>
+    <h2> Tags </h2>
+    <p><a href="#"> View all </a></p>
+
+    <div>
+        @foreach ($tags as $tag)
+            <span> {{ $tag->name }} </span>
+        @endforeach
+    </div>
+</section>
+    
