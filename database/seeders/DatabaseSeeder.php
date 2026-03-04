@@ -9,6 +9,7 @@ use App\Models\User;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +20,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        User::create([
+            'name' => 'Palm',
+            'email' => 'palm@example.com',
+            'password' => Hash::make('password')
+        ]);
+
         $tags = Tag::factory()->count(20)->create();
         User::factory(10)
             ->has(
