@@ -74,7 +74,22 @@ class WebsiteController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $website = Website::findOrFail($id);
+        $user = auth()->user();
+
+        if(!$user->isOwnerOfGroup($website->group_id)) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        if(!$website) {
+            alert('Website not found');
+            return redirect()->route('websites.index');
+        }
+        
+        return view('websites.edit', [
+            'website' => $website,
+            'groups' => $user->group()->get()
+        ]);
     }
 
     /**
@@ -82,7 +97,30 @@ class WebsiteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url|max:255',
+            'description' => 'nullable|string',
+            'rating' => 'required|in:bad,average,good',
+            'group_id' => 'required|exists:groups,id'
+        ]);
+
+        $website = Website::findOrFail($id);
+        $user = auth()->user();
+
+        if(!$user->isOwnerOfGroup($website->group_id)) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $website->update([
+            'name' => $request->name,
+            'url' => $request->url,
+            'description' => $request->description,
+            'rating' => $request->rating,
+            'group_id' => $request->group_id
+        ]);
+
+        return redirect()->route('websites.index');
     }
 
     /**
