@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Website;
+use Illuminate\Http\Request;
 
 class WebsiteController extends Controller
 {
@@ -11,14 +11,12 @@ class WebsiteController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    { 
-        $user = auth()->user();
-        $websites = Website::whereIn('group_id', $user->group()->pluck('id'))->get();
+    {
+        $websites = Website::whereIn('group_id', auth()->user()->group()->pluck('id'))->get();
 
         return view('websites.index', [
-            'websites' => $websites
+            'websites' => $websites,
         ]);
-
     }
 
     /**
@@ -26,9 +24,8 @@ class WebsiteController extends Controller
      */
     public function create()
     {
-        $groups = auth()->user()->group()->get();
         return view('websites.create', [
-            'groups' => $groups
+            'groups' => auth()->user()->group()->get(),
         ]);
     }
 
@@ -37,27 +34,10 @@ class WebsiteController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'url' => 'required|url|max:255',
-            'description' => 'nullable|string',
-            'rating' => 'required|in:bad,average,good',
-            'group_id' => 'required|exists:groups,id'
-        ]);
-        
-        if(!auth()->user()->isOwnerOfGroup($request->group_id)) {
-            abort(403, 'Unauthorized action.');
-        }
+        $validated = $this->validateWebsite($request);
 
-        Website::create([
-            'name' => $request->name,
-            'url' => $request->url,
-            'description' => $request->description,
-            'rating' => $request->rating,
-            'group_id' => $request->group_id
-        ]);
-        
-        
+        Website::create($validated);
+
         return redirect()->route('websites.index');
     }
 
@@ -74,21 +54,11 @@ class WebsiteController extends Controller
      */
     public function edit(string $id)
     {
-        $website = Website::findOrFail($id);
-        $user = auth()->user();
+        $website = $this->findAuthorizedWebsite($id);
 
-        if(!$user->isOwnerOfGroup($website->group_id)) {
-            abort(403, 'Unauthorized action.');
-        }
-        
-        if(!$website) {
-            alert('Website not found');
-            return redirect()->route('websites.index');
-        }
-        
         return view('websites.edit', [
             'website' => $website,
-            'groups' => $user->group()->get()
+            'groups' => auth()->user()->group()->get(),
         ]);
     }
 
@@ -97,28 +67,10 @@ class WebsiteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'url' => 'required|url|max:255',
-            'description' => 'nullable|string',
-            'rating' => 'required|in:bad,average,good',
-            'group_id' => 'required|exists:groups,id'
-        ]);
+        $website = $this->findAuthorizedWebsite($id);
+        $validated = $this->validateWebsite($request);
 
-        $website = Website::findOrFail($id);
-        $user = auth()->user();
-
-        if(!$user->isOwnerOfGroup($website->group_id)) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        $website->update([
-            'name' => $request->name,
-            'url' => $request->url,
-            'description' => $request->description,
-            'rating' => $request->rating,
-            'group_id' => $request->group_id
-        ]);
+        $website->update($validated);
 
         return redirect()->route('websites.index');
     }
@@ -129,5 +81,33 @@ class WebsiteController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function validateWebsite(Request $request): array
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url|max:255',
+            'description' => 'nullable|string',
+            'rating' => 'required|in:bad,average,good',
+            'group_id' => 'required|exists:groups,id',
+        ]);
+
+        if (! auth()->user()->isOwnerOfGroup($validated['group_id'])) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return $validated;
+    }
+
+    private function findAuthorizedWebsite(string $id): Website
+    {
+        $website = Website::findOrFail($id);
+
+        if (! auth()->user()->isOwnerOfGroup($website->group_id)) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return $website;
     }
 }
