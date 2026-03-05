@@ -7,4 +7,6 @@
             <li><a href="{{ $website->url }}" target="_blank">{{ $website->name }}</a></li>
         @endforeach
     </ul>
+    
+    <a href="{{ route('websites.create') }}" class="btn btn-primary">Add New Website</a>
 </div>

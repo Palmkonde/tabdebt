@@ -49,4 +49,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function isOwnerOfGroup($groupId)
+    {
+        $groupId = $groupId ?: null;
+        
+        if(!$groupId) {
+            return true;
+        }
+
+        return $this->group()->where('id', $groupId)->exists();
+    }
 }

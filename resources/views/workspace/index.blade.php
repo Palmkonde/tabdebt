@@ -11,7 +11,7 @@
 <section>
     <div>
         <h2> Recent Added Websites </h2>
-        <p><a href="#">View all</a></p>
+        <p><a href="/websites">View all</a></p>
     <div>
     
     <div>

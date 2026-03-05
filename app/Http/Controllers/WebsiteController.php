@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Website;
 
 class WebsiteController extends Controller
 {
@@ -25,7 +26,10 @@ class WebsiteController extends Controller
      */
     public function create()
     {
-        //
+        $groups = auth()->user()->group()->get();
+        return view('websites.create', [
+            'groups' => $groups
+        ]);
     }
 
     /**
@@ -33,7 +37,27 @@ class WebsiteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url|max:255',
+            'description' => 'nullable|string',
+            'rating' => 'required|in:bad,average,good',
+            'group_id' => 'nullable|exists:groups,id'
+        ]);
+        
+        if(!auth()->user()->isOwnerOfGroup($request->group_id)) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        Website::create([
+            'name' => $request->name,
+            'url' => $request->url,
+            'description' => $request->description,
+            'rating' => $request->rating,
+            'group_id' => $request->group_id
+        ]);
+        
+        return redirect()->route('websites.index');
     }
 
     /**
