@@ -1,3 +1,4 @@
+<x-navbar />
 <h1>{{ $name }}'s Workspace</h1>
 <p> Welcome to your workspace, {{ $name }}! Here you can manage your websites and view your status. </p>
 
