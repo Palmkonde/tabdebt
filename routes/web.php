@@ -12,10 +12,8 @@ authenticated sections:
 */
 Route::middleware('auth')->group(function () {
     Route::get('/workspace', [App\Http\Controllers\WorkspaceController::class, 'index'])->name('workspace.index');
-});
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    Route::resource('/websites', App\Http\Controllers\WebsiteController::class);
+});
 
 require __DIR__.'/auth.php';
