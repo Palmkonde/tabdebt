@@ -42,7 +42,7 @@ class WebsiteController extends Controller
             'url' => 'required|url|max:255',
             'description' => 'nullable|string',
             'rating' => 'required|in:bad,average,good',
-            'group_id' => 'nullable|exists:groups,id'
+            'group_id' => 'required|exists:groups,id'
         ]);
         
         if(!auth()->user()->isOwnerOfGroup($request->group_id)) {
@@ -56,6 +56,7 @@ class WebsiteController extends Controller
             'rating' => $request->rating,
             'group_id' => $request->group_id
         ]);
+        
         
         return redirect()->route('websites.index');
     }

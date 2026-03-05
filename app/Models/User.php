@@ -32,10 +32,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-    
-    public function group() {
-        return $this->hasMany(Group::class, 'user_id', 'id');
-    }
 
     /**
      * Get the attributes that should be cast.
@@ -49,14 +45,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    
+    protected static function booted() {
+     
+        static::created(function (User $user) {
+            $user->group()->create([
+                'name' => 'Other',
+            ]);
+        });
+    }
+
+    public function group() {
+        return $this->hasMany(Group::class, 'user_id', 'id');
+    }
+    
     public function isOwnerOfGroup($groupId)
     {
-        $groupId = $groupId ?: null;
-        
-        if(!$groupId) {
-            return true;
-        }
-
         return $this->group()->where('id', $groupId)->exists();
     }
 }

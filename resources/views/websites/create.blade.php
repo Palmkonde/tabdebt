@@ -30,10 +30,12 @@
         
         <div>
             <label for="group_id">Group</label>
-            <select id="group_id" name="group_id">
-                <option value="" selected>None</option>
+            <select id="group_id" name="group_id" required>
+                <option value="" disabled>Select a group</option>
                 @foreach ($groups as $group)
-                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                    <option value="{{ $group->id }}">
+                        {{ $group->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
