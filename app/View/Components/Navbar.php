@@ -15,8 +15,8 @@ class Navbar extends Component
         public array $links = [
             ['name' => 'Home', 'url' => '/'],
             ['name' => 'Workspace', 'url' => '/workspace'],
-            ['name' => 'Collection', 'url' => '/collection'],
-            ['name' => 'Group', 'url' => '/collection'],
+            ['name' => 'Websites', 'url' => '/websites'],
+            ['name' => 'Groups', 'url' => '/groups'],
         ]
     )
     {

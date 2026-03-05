@@ -18,7 +18,7 @@
         @foreach($recentWebsites as $website)
             <div>
                 <h4> {{ $website->name }} </h4>
-                <p> {{ $website->url }} </p>
+                <p><a href="{{ $website->url }}" target="_blank">{{ $website->url }}</a></p>
                 <p> {{ $website->rating }} </p>
                 <div>
                     @foreach ($website->tags as $tag)
