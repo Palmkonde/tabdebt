@@ -22,18 +22,7 @@
 
             <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                 @foreach($recentWebsites as $website)
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-                        <h4 class="font-semibold text-gray-900 dark:text-white">{{ $website->name }}</h4>
-                        <p class="text-sm text-blue-600 dark:text-blue-400 truncate mt-1">
-                            <a href="{{ $website->url }}" target="_blank">{{ $website->url }}</a>
-                        </p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $website->rating }}</p>
-                        <div class="flex flex-wrap gap-1 mt-2">
-                            @foreach ($website->tags as $tag)
-                                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">{{ $tag->name }}</span>
-                            @endforeach
-                        </div>
-                    </div>
+                    <x-website-card :website="$website" />
                 @endforeach
             </div>
         </section>
