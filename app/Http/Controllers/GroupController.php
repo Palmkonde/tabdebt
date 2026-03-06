@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Group;
+use App\Models\Website;
 
 class GroupController extends Controller
 {
@@ -81,5 +82,15 @@ class GroupController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    
+    public function removeWebsite(Group $group, Website $website)
+    {
+        // Remove from current group and change it to "Other"
+        $user = auth()->user();
+        $defaultGroup = $user->groups()->where('name', 'Other')->first();
+        $website->update(['group_id' => $defaultGroup->id]);
+
+        return redirect()->route('groups.index');
     }
 }
