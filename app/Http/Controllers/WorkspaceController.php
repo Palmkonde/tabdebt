@@ -16,18 +16,18 @@ class WorkspaceController extends Controller
         $tags = Tag::whereHas('groups', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->orWhereHas('websites', function ($query) use ($user) {
-            $query->whereIn('group_id', $user->group()->pluck('id'));
+            $query->whereIn('group_id', $user->groups()->pluck('id'));
         })->get();
 
         return view('workspace.index', [
             'name' => $user->name,
-            'websiteCount' => Website::whereIn('group_id', $user->group()->pluck('id'))->count(),
-            'groupCount' => $user->group()->count(),
-            'recentWebsites' => Website::whereIn('group_id', $user->group()->pluck('id'))
+            'websiteCount' => Website::whereIn('group_id', $user->groups()->pluck('id'))->count(),
+            'groupCount' => $user->groups()->count(),
+            'recentWebsites' => Website::whereIn('group_id', $user->groups()->pluck('id'))
                 ->latest()
                 ->take(3)
                 ->get(),
-            'groups' => $user->group()->withCount('websites')->get(),
+            'groups' => $user->groups()->withCount('websites')->get(),
             'tags' => $tags,
         ]);
     }

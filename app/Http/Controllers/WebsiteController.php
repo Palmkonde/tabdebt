@@ -12,7 +12,7 @@ class WebsiteController extends Controller
      */
     public function index()
     {
-        $websites = Website::whereIn('group_id', auth()->user()->group()->pluck('id'))->get();
+        $websites = Website::whereIn('group_id', auth()->user()->groups()->pluck('id'))->get();
 
         return view('websites.index', [
             'websites' => $websites,
@@ -25,7 +25,7 @@ class WebsiteController extends Controller
     public function create()
     {
         return view('websites.create', [
-            'groups' => auth()->user()->group()->get(),
+            'groups' => auth()->user()->groups()->get(),
         ]);
     }
 
@@ -58,7 +58,7 @@ class WebsiteController extends Controller
 
         return view('websites.edit', [
             'website' => $website,
-            'groups' => auth()->user()->group()->get(),
+            'groups' => auth()->user()->groups()->get(),
         ]);
     }
 

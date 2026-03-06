@@ -49,18 +49,18 @@ class User extends Authenticatable
     protected static function booted() {
      
         static::created(function (User $user) {
-            $user->group()->create([
+            $user->groups()->create([
                 'name' => 'Other',
             ]);
         });
     }
 
-    public function group() {
+    public function groups() {
         return $this->hasMany(Group::class, 'user_id', 'id');
     }
     
     public function isOwnerOfGroup($groupId)
     {
-        return $this->group()->where('id', $groupId)->exists();
+        return $this->groups()->where('id', $groupId)->exists();
     }
 }
