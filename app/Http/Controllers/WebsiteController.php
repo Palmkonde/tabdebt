@@ -89,11 +89,11 @@ class WebsiteController extends Controller
     private function validateWebsite(Request $request): array
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'url' => 'required|url|max:255',
-            'description' => 'nullable|string',
-            'rating' => 'required|in:bad,average,good',
-            'group_id' => 'required|exists:groups,id',
+            'name' => ['required', 'string', 'max:255'],
+            'url' => ['required', 'url', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'rating' => ['required', 'in:bad,average,good'],
+            'group_id' => ['required', 'exists:groups,id'],
         ]);
 
         if (! auth()->user()->isOwnerOfGroup($validated['group_id'])) {
