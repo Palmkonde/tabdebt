@@ -1,3 +1,4 @@
+<x-app-layout>
 <x-navbar />
 <div>
     <h1>Websites</h1>
@@ -20,3 +21,4 @@
     
     <a href="{{ route('websites.create') }}" class="btn btn-primary">Add New Website</a>
 </div>
+</x-app-layout>
