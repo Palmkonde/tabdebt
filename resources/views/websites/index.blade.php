@@ -7,7 +7,12 @@
             <li>
                 <a href="{{ $website->url }}" target="_blank">{{ $website->name }}</a>
                 <span><a href="{{ route('websites.edit', $website->id) }}" class="btn btn-sm btn-secondary">Edit</a></span>
-                <span><a href="{{ route('websites.destroy', $website->id) }}" class="btn btn-sm btn-danger" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $website->id }}').submit();">Delete</a></span>
+                
+                <form action="{{ route('websites.destroy', $website->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
             </li>
             
         @endforeach

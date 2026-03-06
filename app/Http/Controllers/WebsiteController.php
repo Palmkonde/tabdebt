@@ -80,7 +80,10 @@ class WebsiteController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $website = $this->findAuthorizedWebsite($id);
+        $website->delete();
+
+        return redirect()->route('websites.index');
     }
 
     private function validateWebsite(Request $request): array
