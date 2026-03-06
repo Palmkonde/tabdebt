@@ -19,12 +19,12 @@
             <div class="mt-8 flex items-center justify-center gap-4">
                 @auth
                     <a href="{{ route('workspace.index') }}"
-                       class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                       class="px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition">
                         Go to Workspace
                     </a>
                 @else
                     <a href="{{ route('login') }}"
-                       class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                       class="px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition">
                         Log In
                     </a>
                     <a href="{{ route('register') }}"

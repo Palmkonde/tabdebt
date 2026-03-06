@@ -8,6 +8,7 @@
             <div>
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Groups</h1>
                 <p class="text-gray-500 dark:text-gray-400 mt-1">Organize your websites into groups.</p>
+                <p>Note: If you "Delete" is the delete website and "Remove from Group" is the remove website from its current group and move it into "Other".</p>
             </div>
             <a href="{{ route('groups.create') }}"
                class="px-4 py-2 bg-amber-500 text-white text-sm font-semibold rounded-lg hover:bg-amber-600 transition">
@@ -46,7 +47,7 @@
                     @else
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             @foreach ($group->websites as $website)
-                                <x-website-card :website="$website" />
+                                <x-website-card :website="$website" :group="$group" />
                             @endforeach
                         </div>
                     @endif

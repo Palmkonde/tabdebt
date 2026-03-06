@@ -10,7 +10,7 @@
                 <p class="text-gray-500 dark:text-gray-400 mt-1">Manage all your saved websites.</p>
             </div>
             <a href="{{ route('websites.create') }}"
-               class="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition">
+               class="px-4 py-2 bg-amber-500 text-white text-sm font-semibold rounded-lg hover:bg-amber-600 transition">
                 + Add Website
             </a>
         </div>

@@ -7,7 +7,7 @@
         <ul class="flex gap-6">
             @foreach ($links as $link)
                 <li>
-                    <a href="{{ $link['url'] }}" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                    <a href="{{ $link['url'] }}" class="{{ request()->url() === $link['url'] ? 'text-amber-600 dark:text-amber-400 font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400' }} transition-colors">
                         {{ $link['name'] }}
                     </a>
                 </li>
