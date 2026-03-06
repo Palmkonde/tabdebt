@@ -16,6 +16,8 @@
                     <p>{{ $group->description }}</p>
                 @endif
                 <span>{{ $group->websites->count() }} {{ Str::plural('site', $group->websites->count()) }}</span>
+                <a href="{{ route('groups.edit', $group) }}">Edit</a>
+                <a href="{{ route('groups.destroy', $group) }}" onclick="return confirm('Are you sure?')">Delete</a>
             </div>
 
             @if ($group->websites->isEmpty())
@@ -24,6 +26,7 @@
                 <div>
                     @foreach ($group->websites as $website)
                         <x-website-card :website="$website" />
+                        <span> Delete from group </span>
                     @endforeach
                 </div>
             @endif

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Group;
+
 class GroupController extends Controller
 {
     /**
@@ -13,19 +15,18 @@ class GroupController extends Controller
     {
         $user = auth()->user();
         $groups = $user->groups()->with('websites.tags')->get();
-        
 
         return view('groups.index', [
             'groups' => $groups,
         ]);
-}
+    }
 
 /**
     * Show the form for creating a new resource.
     */
-public function create()
-{
-        //
+    public function create()
+    {
+        return view('groups.create');
     }
 
     /**
@@ -33,7 +34,21 @@ public function create()
      */
     public function store(Request $request)
     {
-        //
+        $user = auth()->user();
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable' , 'string', 'max:500'],
+        ]);
+        
+        Group::create([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'user_id' => $user->id,
+        ]);
+        
+        
+        
+        return redirect()->route('groups.index');
     }
 
     /**
