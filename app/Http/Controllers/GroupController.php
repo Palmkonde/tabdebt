@@ -12,7 +12,7 @@ class GroupController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $groups = $user->groups()->get(); 
+        $groups = $user->groups()->with('websites.tags')->get();
         
 
         return view('groups.index', [
