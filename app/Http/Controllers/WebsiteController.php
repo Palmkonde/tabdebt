@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Website;
+use App\Models\Tag;
+
 use Illuminate\Http\Request;
 
 class WebsiteController extends Controller
@@ -26,6 +28,7 @@ class WebsiteController extends Controller
     {
         return view('websites.create', [
             'groups' => auth()->user()->groups()->get(),
+            'tags' => Tag::all(),
         ]);
     }
 
@@ -35,8 +38,8 @@ class WebsiteController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validateWebsite($request);
-
-        Website::create($validated);
+        $website = Website::create($validated);
+        $website->tags()->sync($request->input('tags', []));
 
         return redirect()->route('websites.index');
     }
@@ -55,10 +58,12 @@ class WebsiteController extends Controller
     public function edit(string $id)
     {
         $website = $this->findAuthorizedWebsite($id);
+        $website->load('tags');
 
         return view('websites.edit', [
             'website' => $website,
             'groups' => auth()->user()->groups()->get(),
+            'tags' => Tag::all(),
         ]);
     }
 
@@ -71,6 +76,7 @@ class WebsiteController extends Controller
         $validated = $this->validateWebsite($request);
 
         $website->update($validated);
+        $website->tags()->sync($request->input('tags', []));
 
         return redirect()->route('websites.index');
     }
@@ -94,6 +100,8 @@ class WebsiteController extends Controller
             'description' => ['nullable', 'string'],
             'rating' => ['required', 'in:bad,average,good'],
             'group_id' => ['required', 'exists:groups,id'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['exists:tags,id'],
         ]);
 
         if (! auth()->user()->isOwnerOfGroup($validated['group_id'])) {

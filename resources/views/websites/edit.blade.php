@@ -25,7 +25,7 @@
                 @csrf
                 @method('PUT')
 
-                <x-website-form :groups="$groups" :website="$website" />
+                <x-website-form :groups="$groups" :tags="$tags" :website="$website" />
 
                 <div class="mt-10 flex items-center justify-end gap-4">
                     <a href="{{ route('websites.index') }}"

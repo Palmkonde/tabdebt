@@ -41,10 +41,13 @@
                             {{-- Color hex --}}
                             <p class="text-xs text-gray-400 dark:text-gray-500 mt-2 ml-7 font-mono">{{ $tag->color }}</p>
 
-                            {{-- Website count --}}
-                            <div class="mt-4 ml-7">
+                            {{-- Counts --}}
+                            <div class="flex flex-wrap gap-2 mt-4 ml-7">
                                 <span class="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
-                                    {{ $tag->websites_count ?? $tag->websites->count() }} {{ Str::plural('website', $tag->websites_count ?? $tag->websites->count()) }}
+                                    {{ $tag->websites_count }} {{ Str::plural('website', $tag->websites_count) }}
+                                </span>
+                                <span class="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                                    {{ $tag->groups_count }} {{ Str::plural('group', $tag->groups_count) }}
                                 </span>
                             </div>
                         </div>

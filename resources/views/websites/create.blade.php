@@ -24,7 +24,7 @@
             <form action="{{ route('websites.store') }}" method="POST">
                 @csrf
 
-                <x-website-form :groups="$groups" />
+                <x-website-form :groups="$groups" :tags="$tags" />
 
                 <div class="mt-10 flex items-center justify-end gap-4">
                     <a href="{{ route('websites.index') }}"
