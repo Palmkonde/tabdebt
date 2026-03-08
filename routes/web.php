@@ -17,6 +17,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/groups', App\Http\Controllers\GroupController::class);
     Route::delete('/groups/{group}/websites/{website}', [App\Http\Controllers\GroupController::class, 'removeWebsite'])->name('groups.websites.remove');
+    
+    Route::resource('/tags', App\Http\Controllers\TagController::class);
 });
 
 require __DIR__.'/auth.php';

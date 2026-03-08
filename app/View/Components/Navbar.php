@@ -17,6 +17,7 @@ class Navbar extends Component
             ['name' => 'Workspace', 'url' => '/workspace'],
             ['name' => 'Websites', 'url' => '/websites'],
             ['name' => 'Groups', 'url' => '/groups'],
+            ['name' => 'Tags', 'url' => '/tags'],
         ]
     )
     {
