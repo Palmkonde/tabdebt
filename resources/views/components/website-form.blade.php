@@ -76,24 +76,6 @@
     </div>
 
     {{-- Tags --}}
-    @if ($tags->isNotEmpty())
-        <div>
-            <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 tracking-wide uppercase">Tags</label>
-            <div class="flex flex-wrap gap-3">
-                @foreach ($tags as $tag)
-                    <label class="inline-flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
-                               @checked(in_array($tag->id, old('tags', isset($website) ? $website->tags->pluck('id')->toArray() : [])))
-                               class="rounded border-gray-300 dark:border-gray-600 text-amber-500 focus:ring-amber-500 dark:bg-gray-700" />
-                        <span class="w-3 h-3 rounded-full shrink-0" style="background-color: {{ $tag->color }};"></span>
-                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $tag->name }}</span>
-                    </label>
-                @endforeach
-            </div>
-            @error('tags')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-            @enderror
-        </div>
-    @endif
+    <x-tag-select :tags="$tags" :selected="isset($website) ? $website->tags->pluck('id')->toArray() : []" />
 
 </div>
