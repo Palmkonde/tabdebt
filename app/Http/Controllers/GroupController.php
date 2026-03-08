@@ -14,7 +14,7 @@ class GroupController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $groups = $user->groups()->with('websites.tags')->get();
+        $groups = $user->groups()->with(['tags', 'websites.tags'])->get();
 
         return view('groups.index', [
             'groups' => $groups,
