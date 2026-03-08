@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\Group;
 use App\Models\Website;
+use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
@@ -22,9 +21,9 @@ class GroupController extends Controller
         ]);
     }
 
-/**
-    * Show the form for creating a new resource.
-    */
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         return view('groups.create');
@@ -38,17 +37,15 @@ class GroupController extends Controller
         $user = auth()->user();
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable' , 'string', 'max:500'],
+            'description' => ['nullable', 'string', 'max:500'],
         ]);
-        
+
         Group::create([
             'name' => $data['name'],
             'description' => $data['description'],
             'user_id' => $user->id,
         ]);
-        
-        
-        
+
         return redirect()->route('groups.index');
     }
 
@@ -65,7 +62,11 @@ class GroupController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $group = $this->findAuthorizedGroup($id);
+
+        return view('groups.edit', [
+            'group' => $group,
+        ]);
     }
 
     /**
@@ -73,7 +74,16 @@ class GroupController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $group = $this->findAuthorizedGroup($id);
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $group->update($data);
+
+        return redirect()->route('groups.index');
     }
 
     /**
@@ -83,7 +93,7 @@ class GroupController extends Controller
     {
         //
     }
-    
+
     public function removeWebsite(Group $group, Website $website)
     {
         // Remove from current group and change it to "Other"
@@ -92,5 +102,13 @@ class GroupController extends Controller
         $website->update(['group_id' => $defaultGroup->id]);
 
         return redirect()->route('groups.index');
+    }
+
+    private function findAuthorizedGroup(string $id)
+    {
+        $user = auth()->user();
+        $group = Group::where('id', $id)->where('user_id', $user->id)->firstOrFail();
+
+        return $group;
     }
 }
