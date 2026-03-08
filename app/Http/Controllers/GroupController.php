@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
+use App\Models\Tag;
 use App\Models\Website;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,9 @@ class GroupController extends Controller
      */
     public function create()
     {
-        return view('groups.create');
+        return view('groups.create', [
+            'tags' => Tag::all(),
+        ]);
     }
 
     /**
@@ -35,16 +38,12 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:500'],
-        ]);
+        $validate = $this->validateGroup($request);
 
-        Group::create([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'user_id' => $user->id,
-        ]);
+        $group = Group::create(
+            collect($validate)->except('tags')->merge(['user_id' => $user->id])->toArray());
+
+        $group->tags()->sync($request->input('tags', []));
 
         return redirect()->route('groups.index');
     }
@@ -63,9 +62,11 @@ class GroupController extends Controller
     public function edit(string $id)
     {
         $group = $this->findAuthorizedGroup($id);
+        $group->load('tags');
 
         return view('groups.edit', [
             'group' => $group,
+            'tags' => Tag::all(),
         ]);
     }
 
@@ -75,13 +76,20 @@ class GroupController extends Controller
     public function update(Request $request, string $id)
     {
         $group = $this->findAuthorizedGroup($id);
+        $validate = $this->validateGroup($request);
+        $defaultGroup = $this->findDefaultGroup();
 
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:500'],
-        ]);
+        // Update other data in "Other" group
+        $group->update(collect($validate)->except('tags')->toArray());
 
-        $group->update($data);
+        // Prevent to update tags in "Other" group
+        if ($group->id === $defaultGroup->id) {
+            abort(403, 'Unable to update tags into the default group.');
+
+            return redirect()->route('groups.index');
+        }
+
+        $group->tags()->sync($request->input('tags', []));
 
         return redirect()->route('groups.index');
     }
@@ -93,21 +101,23 @@ class GroupController extends Controller
     {
         $user = auth()->user();
         $group = $this->findAuthorizedGroup($id);
-        
+
         // Delete the group and move all its websites to "Other" group
-        $defaultGroup = $user->groups()->where('name', 'Other')->first();
-        
+        $defaultGroup = $this->findDefaultGroup();
+
         // Prevent deletion of the default group
-        if($group->id === $defaultGroup->id) {
+        if ($group->id === $defaultGroup->id) {
             abort(403, 'Unable to delete the default group.');
+
             return redirect()->route('groups.index');
         }
-        
+
         foreach ($group->websites as $website) {
             $website->update(['group_id' => $defaultGroup->id]);
         }
-        
+
         $group->delete();
+
         return redirect()->route('groups.index');
     }
 
@@ -115,17 +125,32 @@ class GroupController extends Controller
     {
         // Remove from current group and change it to "Other"
         $user = auth()->user();
-        $defaultGroup = $user->groups()->where('name', 'Other')->first();
+        $defaultGroup = $this->findDefaultGroup();
         $website->update(['group_id' => $defaultGroup->id]);
 
         return redirect()->route('groups.index');
     }
 
+    private function validateGroup(Request $request): array
+    {
+        return $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:500'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['exists:tags,id'],
+        ]);
+    }
+
     private function findAuthorizedGroup(string $id)
     {
         $user = auth()->user();
-        $group = Group::where('id', $id)->where('user_id', $user->id)->firstOrFail();
 
-        return $group;
+        return Group::where('id', $id)->where('user_id', $user->id)->firstOrFail();
+
+    }
+
+    private function findDefaultGroup()
+    {
+        return auth()->user()->groups()->where('name', 'Other')->firstOrFail();
     }
 }
