@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Models\Website;
 use App\Models\Tag;
+use App\Models\Website;
 
 class WorkspaceController extends Controller
 {
@@ -27,7 +25,10 @@ class WorkspaceController extends Controller
                 ->latest()
                 ->take(3)
                 ->get(),
-            'groups' => $user->groups()->withCount('websites')->get(),
+            'groups' => $user->groups()->withCount('websites')
+                ->latest()
+                ->take(3)
+                ->get(),
             'tags' => $tags,
         ]);
     }
