@@ -1,4 +1,4 @@
-@props(['group' => null])
+@props(['group' => null, 'tags' => collect()])
 
 <div class="space-y-6">
     {{-- Name --}}
@@ -22,4 +22,9 @@
             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
         @enderror
     </div>
+
+    {{-- Tags (hidden for "Other" group) --}}
+    @if (!isset($group) || $group->name !== 'Other')
+        <x-tag-select :tags="$tags" :selected="isset($group) ? $group->tags->pluck('id')->toArray() : []" />
+    @endif
 </div>

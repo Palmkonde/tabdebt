@@ -25,7 +25,7 @@
                 @csrf
                 @method('PUT')
 
-                <x-group-form :group="$group" />
+                <x-group-form :group="$group" :tags="$tags" />
 
                 <div class="mt-10 flex items-center justify-end gap-4">
                     <a href="{{ route('groups.index') }}"

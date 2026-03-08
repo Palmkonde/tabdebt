@@ -55,7 +55,7 @@
                         {{-- Actions --}}
                         <div class="flex items-center gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                             <a href="{{ route('tags.show', $tag) }}"
-                               class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:underline">View Websites</a>
+                               class="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:underline">View</a>
                             <a href="{{ route('tags.edit', $tag) }}"
                                class="text-sm text-amber-600 dark:text-amber-400 hover:underline">Edit</a>
                             <form action="{{ route('tags.destroy', $tag) }}" method="POST" onsubmit="return confirm('Are you sure?')">

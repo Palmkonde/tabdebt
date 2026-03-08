@@ -24,7 +24,7 @@
             <form action="{{ route('groups.store') }}" method="POST">
                 @csrf
 
-                <x-group-form />
+                <x-group-form :tags="$tags" />
 
                 <div class="mt-10 flex items-center justify-end gap-4">
                     <a href="{{ route('groups.index') }}"
