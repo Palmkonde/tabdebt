@@ -9,10 +9,6 @@
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tags</h1>
                 <p class="text-gray-500 dark:text-gray-400 mt-1">Browse and manage your tags.</p>
             </div>
-            <a href="{{ route('tags.create') }}"
-               class="px-4 py-2 bg-amber-500 text-white text-sm font-semibold rounded-lg hover:bg-amber-600 transition">
-                + New Tag
-            </a>
         </div>
 
         @if ($tags->isEmpty())

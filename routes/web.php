@@ -15,9 +15,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/websites', App\Http\Controllers\WebsiteController::class)->except(['show']);
 
-    Route::resource('/groups', App\Http\Controllers\GroupController::class);
+    Route::resource('/groups', App\Http\Controllers\GroupController::class)->except(['show']);
     Route::delete('/groups/{group}/websites/{website}', [App\Http\Controllers\GroupController::class, 'removeWebsite'])->name('groups.websites.remove');
-    
+
     Route::resource('/tags', App\Http\Controllers\TagController::class);
 });
 
