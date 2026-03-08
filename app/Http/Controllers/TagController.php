@@ -14,9 +14,24 @@ class TagController extends Controller
     {
         $user = auth()->user();
         
-        $tags = Tag::whereHas('websites', function ($query) use ($user) {
-           $query->whereIn('group_id', $user->groups()->pluck('id'));
-        })->get();
+        $groupIds = $user->groups()->pluck('id');
+
+        $tags = Tag::where(function ($query) use ($groupIds) {
+            $query->whereHas('websites', function ($q) use ($groupIds) {
+                $q->whereIn('group_id', $groupIds);
+            })->orWhereHas('groups', function ($q) use ($groupIds) {
+                $q->whereIn('groups.id', $groupIds);
+            });
+        })
+            ->withCount([
+                'websites' => function ($q) use ($groupIds) {
+                    $q->whereIn('group_id', $groupIds);
+                },
+                'groups' => function ($q) use ($groupIds) {
+                    $q->whereIn('groups.id', $groupIds);
+                },
+            ])
+            ->get();
 
         return view('tags.index', [
             'tags' => $tags,
@@ -80,6 +95,23 @@ class TagController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $tag = $this->findAuthorizedTag($id);
+
+        $tag->delete();
+        return redirect()->route('tags.index'); 
+    }
+    
+    private function findAuthorizedTag($id)
+    {
+        $user = auth()->user();
+        $groupIds = $user->groups()->pluck('id');
+        
+        return Tag::where('id', $id)->where(function ($query) use ($groupIds) {
+            $query->whereHas('websites', function ($q) use ($groupIds) {
+                $q->whereIn('group_id', $groupIds);
+            })->orWhereHas('groups', function ($q) use ($groupIds) {
+                $q->whereIn('groups.id', $groupIds);
+            });
+        })->firstOrFail();
     }
 }
