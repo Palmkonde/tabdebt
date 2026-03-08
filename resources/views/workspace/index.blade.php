@@ -50,11 +50,11 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Tags</h2>
-                    <a href="#" class="text-sm text-amber-600 dark:text-amber-400 hover:underline">View all</a>
+                    <a href="{{ route('tags.index') }}" class="text-sm text-amber-600 dark:text-amber-400 hover:underline">View all</a>
                 </div>
                 <div class="flex flex-wrap gap-2 mt-3">
                     @foreach ($tags as $tag)
-                        <span class="text-sm bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full">{{ $tag->name }}</span>
+                        <a href="{{ route('tags.show', $tag) }}" class="text-sm bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors">{{ $tag->name }}</a>
                     @endforeach
                 </div>
             </div>
