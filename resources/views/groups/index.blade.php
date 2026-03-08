@@ -36,7 +36,10 @@
                             <form action="{{ route('groups.destroy', $group) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                                
+                                @if($group->name !== 'Other')
+                                    <button type="submit" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
+                                @endif 
                             </form>
                         </div>
                     </div>

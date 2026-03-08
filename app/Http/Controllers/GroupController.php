@@ -91,7 +91,24 @@ class GroupController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = auth()->user();
+        $group = $this->findAuthorizedGroup($id);
+        
+        // Delete the group and move all its websites to "Other" group
+        $defaultGroup = $user->groups()->where('name', 'Other')->first();
+        
+        // Prevent deletion of the default group
+        if($group->id === $defaultGroup->id) {
+            abort(403, 'Unable to delete the default group.');
+            return redirect()->route('groups.index');
+        }
+        
+        foreach ($group->websites as $website) {
+            $website->update(['group_id' => $defaultGroup->id]);
+        }
+        
+        $group->delete();
+        return redirect()->route('groups.index');
     }
 
     public function removeWebsite(Group $group, Website $website)
