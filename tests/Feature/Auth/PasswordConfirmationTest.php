@@ -12,7 +12,7 @@ test('confirm password screen can be rendered', function () {
 
     $response
         ->assertSeeVolt('pages.auth.confirm-password')
-        ->assertStatus(200);
+        ->assertSuccessful();
 });
 
 test('password can be confirmed', function () {
@@ -26,7 +26,7 @@ test('password can be confirmed', function () {
     $component->call('confirmPassword');
 
     $component
-        ->assertRedirect('/dashboard')
+        ->assertRedirect('/workspace')
         ->assertHasNoErrors();
 });
 

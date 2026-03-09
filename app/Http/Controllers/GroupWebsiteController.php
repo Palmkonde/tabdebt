@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Group;
+use App\Models\Website;
+
 class GroupWebsiteController extends Controller
 {
     public function removeWebsite(Group $group, Website $website)

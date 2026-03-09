@@ -37,7 +37,7 @@ class WebsiteController extends Controller
     public function store(Request $request)
     {
         $validated = $this->validateWebsite($request);
-        $website = Website::create(collect($validated)->execpt('tags')->toArray());
+        $website = Website::create(collect($validated)->except('tags')->toArray());
         $website->tags()->sync($request->input('tags', []));
 
         return redirect()->route('websites.index');
