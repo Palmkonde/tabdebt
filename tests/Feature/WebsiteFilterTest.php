@@ -80,18 +80,56 @@ it('filters websites by tag', function () {
         ->assertDontSee('Untagged');
 });
 
-it('resets all filters', function () {
+it('sorts websites by name ascending', function () {
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Zeta']);
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Alpha']);
+
+    Volt::test('website-filter')
+        ->set('sortBy', 'name_asc')
+        ->assertSeeInOrder(['Alpha', 'Zeta']);
+});
+
+it('sorts websites by name descending', function () {
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Alpha']);
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Zeta']);
+
+    Volt::test('website-filter')
+        ->set('sortBy', 'name_desc')
+        ->assertSeeInOrder(['Zeta', 'Alpha']);
+});
+
+it('sorts websites by oldest first', function () {
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'First', 'created_at' => now()->subDay()]);
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Second', 'created_at' => now()]);
+
+    Volt::test('website-filter')
+        ->set('sortBy', 'oldest')
+        ->assertSeeInOrder(['First', 'Second']);
+});
+
+it('sorts websites by rating best first', function () {
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Bad Site', 'rating' => 'bad']);
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Good Site', 'rating' => 'good']);
+
+    Volt::test('website-filter')
+        ->set('sortBy', 'rating_best')
+        ->assertSeeInOrder(['Good Site', 'Bad Site']);
+});
+
+it('resets all filters including sort', function () {
     Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Laravel']);
     Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Tailwind']);
 
     Volt::test('website-filter')
         ->set('search', 'Laravel')
+        ->set('sortBy', 'name_asc')
         ->assertDontSee('Tailwind')
         ->call('resetFilters')
         ->assertSet('search', '')
         ->assertSet('rating', '')
         ->assertSet('groupId', '')
-        ->assertSet('tagId', '');
+        ->assertSet('tagId', '')
+        ->assertSet('sortBy', '');
 });
 
 it('shows empty state when no results', function () {
