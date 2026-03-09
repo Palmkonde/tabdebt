@@ -62,7 +62,13 @@ class GroupController extends Controller
     public function edit(string $id)
     {
         $group = $this->findAuthorizedGroup($id);
+        $defaultGroup = $this->findDefaultGroup();
         $group->load('tags');
+        
+        if($group->id === $defaultGroup->id) {
+            abort(403, 'Unable to edit the default group.');
+            return redirect()->route('groups.index');
+        }
 
         return view('groups.edit', [
             'group' => $group,

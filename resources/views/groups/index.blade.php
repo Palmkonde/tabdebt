@@ -43,7 +43,11 @@
                             <span class="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
                                 {{ $group->websites->count() }} {{ Str::plural('site', $group->websites->count()) }}
                             </span>
-                            <a href="{{ route('groups.edit', $group) }}" class="text-sm text-amber-600 dark:text-amber-400 hover:underline">Edit</a>
+                            
+                            @if($group->name !== 'Other')
+                                <a href="{{ route('groups.edit', $group) }}" class="text-sm text-amber-600 dark:text-amber-400 hover:underline">Edit</a>
+                            @endif 
+
                             <form action="{{ route('groups.destroy', $group) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                 @csrf
                                 @method('DELETE')
