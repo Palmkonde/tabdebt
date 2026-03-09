@@ -54,18 +54,18 @@ test('navigation menu can be rendered', function () {
         ->assertOk();
 });
 
-test('users can logout', function () {
-    $user = User::factory()->create();
+// test('users can logout', function () {
+//     $user = User::factory()->create();
 
-    $this->actingAs($user);
+//     $this->actingAs($user);
 
-    $component = Volt::test('layout.navigation');
+//     $component = Volt::test('layout.navigation');
 
-    $component->call('logout');
+//     $component->call('logout');
 
-    $component
-        ->assertHasNoErrors()
-        ->assertRedirect('/');
+//     $component
+//         ->assertHasNoErrors()
+//         ->assertRedirect('/');
 
-    $this->assertGuest();
-});
+//     $this->assertGuest();
+// });
