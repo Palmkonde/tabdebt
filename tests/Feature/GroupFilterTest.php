@@ -57,14 +57,44 @@ it('filters groups by tag', function () {
         ->assertDontSee('Untagged Group');
 });
 
-it('resets all filters', function () {
+it('sorts groups by name ascending', function () {
+    Group::factory()->create(['user_id' => $this->user->id, 'name' => 'Zebra']);
+    Group::factory()->create(['user_id' => $this->user->id, 'name' => 'Alpha']);
+
+    Volt::test('group-filter')
+        ->set('sortBy', 'name_asc')
+        ->assertSeeInOrder(['Alpha', 'Other', 'Zebra']);
+});
+
+it('sorts groups by name descending', function () {
+    Group::factory()->create(['user_id' => $this->user->id, 'name' => 'Alpha']);
+    Group::factory()->create(['user_id' => $this->user->id, 'name' => 'Zebra']);
+
+    Volt::test('group-filter')
+        ->set('sortBy', 'name_desc')
+        ->assertSeeInOrder(['Zebra', 'Other', 'Alpha']);
+});
+
+it('sorts groups by most websites', function () {
+    $empty = Group::factory()->create(['user_id' => $this->user->id, 'name' => 'Empty Group']);
+    $full = Group::factory()->create(['user_id' => $this->user->id, 'name' => 'Full Group']);
+    Website::factory()->count(3)->create(['group_id' => $full->id]);
+
+    Volt::test('group-filter')
+        ->set('sortBy', 'most_sites')
+        ->assertSeeInOrder(['Full Group', 'Empty Group']);
+});
+
+it('resets all filters including sort', function () {
     Group::factory()->create(['user_id' => $this->user->id, 'name' => 'Dev Tools']);
 
     Volt::test('group-filter')
         ->set('search', 'Dev')
+        ->set('sortBy', 'name_asc')
         ->call('resetFilters')
         ->assertSet('search', '')
-        ->assertSet('tagId', '');
+        ->assertSet('tagId', '')
+        ->assertSet('sortBy', '');
 });
 
 it('shows empty state when no results', function () {
