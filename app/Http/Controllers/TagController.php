@@ -60,17 +60,23 @@ class TagController extends Controller
     public function show(string $id)
     {
         $user = auth()->user();
-        $tag = Tag::where('id', $id)->whereHas('websites', function ($query) use ($user) {
-            $query->whereIn('group_id', $user->groups()->pluck('id'));
-        })->firstOrFail();
-
-        $websites = $tag->websites()->whereHas('group', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->get();
+        $groupIds = $user->groups()->pluck('id'); 
+        
+        $tag = $this->findAuthorizedTag($id);
+        
+        $websites = $tag->websites()->whereIn('group_id', $groupIds)
+            ->with('tags')
+            ->get();
+        
+        $groups = $tag->groups()->whereIn('groups.id', $groupIds)
+            ->withCount('websites')
+            ->with('tags')
+            ->get();
 
         return view('tags.show', [
             'tag' => $tag,
             'websites' => $websites,
+            'groups' => $groups,
         ]);
     }
 
