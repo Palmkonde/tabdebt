@@ -81,7 +81,7 @@ $hasFilters = computed(function () {
             <div>
                 <select
                     wire:model.live="rating"
-                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
+                    class="px-2 py-2 w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
                 >
                     <option value="">All Ratings</option>
                     <option value="good">Good</option>
@@ -94,7 +94,7 @@ $hasFilters = computed(function () {
             <div>
                 <select
                     wire:model.live="groupId"
-                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
+                    class="px-2 py-2 w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
                 >
                     <option value="">All Groups</option>
                     @foreach ($this->groups as $group)
@@ -107,7 +107,7 @@ $hasFilters = computed(function () {
             <div>
                 <select
                     wire:model.live="tagId"
-                    class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
+                    class="px-2 py-2 w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
                 >
                     <option value="">All Tags</option>
                     @foreach ($this->tags as $tag)
