@@ -14,11 +14,13 @@
             @elseif($website->rating === 'bad') bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300
             @else bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300
             @endif">{{ ucfirst($website->rating) }}</span>
-        <div class="flex flex-wrap gap-1 mt-2">
-            @foreach ($website->tags as $tag)
-                <span class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">{{ $tag->name }}</span>
-            @endforeach
-        </div>
+        @if ($website->tags->isNotEmpty())
+            <div class="flex flex-wrap gap-1 mt-2">
+                @foreach ($website->tags as $tag)
+                    <x-tag-pill :tag="$tag" />
+                @endforeach
+            </div>
+        @endif
     </div>
 
     <div class="flex items-center gap-2 mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
