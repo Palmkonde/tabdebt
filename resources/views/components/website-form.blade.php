@@ -1,4 +1,4 @@
-@props(['website' => null, 'groups', 'tags' => collect()])
+@props(['website' => null, 'groups' => collect(), 'tags' => collect()])
 
 <div class="space-y-6">
 
@@ -57,20 +57,7 @@
 
         {{-- Group --}}
         <div>
-            <label for="group_id" class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1 tracking-wide uppercase">Group</label>
-            <select id="group_id" name="group_id" required
-                    class="w-full bg-transparent border-0 border-b-2 border-gray-200 dark:border-gray-700 px-0 py-3 text-lg text-gray-900 dark:text-white focus:border-amber-500 focus:ring-0 transition-colors duration-300 cursor-pointer">
-                <option value="" disabled class="bg-white dark:bg-gray-800">Select a group</option>
-                @foreach ($groups as $group)
-                    <option value="{{ $group->id }}" @selected(old('group_id', $website->group_id ?? '') == $group->id)
-                            class="bg-white dark:bg-gray-800">
-                        {{ $group->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('group_id')
-                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-            @enderror
+            <livewire:group-selector :selected-group-id="old('group_id', $website->group_id ?? '')" />
         </div>
 
     </div>
