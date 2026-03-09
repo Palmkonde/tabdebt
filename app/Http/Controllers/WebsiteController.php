@@ -13,11 +13,7 @@ class WebsiteController extends Controller
      */
     public function index()
     {
-        $websites = Website::with('tags')->whereIn('group_id', auth()->user()->groups()->pluck('id'))->get();
-
-        return view('websites.index', [
-            'websites' => $websites,
-        ]);
+        return view('websites.index');
     }
 
     /**

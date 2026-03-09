@@ -15,10 +15,8 @@
             </a>
         </div>
 
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            @foreach ($websites as $website)
-                <x-website-card :website="$website" />
-            @endforeach
+        <div class="mt-6">
+            <livewire:website-filter />
         </div>
 
     </div>
