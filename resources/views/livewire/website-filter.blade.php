@@ -10,6 +10,7 @@ state([
     'rating' => '',
     'groupId' => '',
     'tagId' => '',
+    'sortBy' => '',
 ])->url();
 
 $groups = computed(function () {
@@ -50,15 +51,24 @@ $websites = computed(function () {
         $query->whereHas('tags', fn ($q) => $q->where('tags.id', $this->tagId));
     }
 
-    return $query->latest()->get();
+    match ($this->sortBy) {
+        'oldest' => $query->oldest(),
+        'name_asc' => $query->orderBy('name'),
+        'name_desc' => $query->orderBy('name', 'desc'),
+        'rating_best' => $query->orderByRaw("CASE rating WHEN 'good' THEN 1 WHEN 'average' THEN 2 WHEN 'bad' THEN 3 END"),
+        'rating_worst' => $query->orderByRaw("CASE rating WHEN 'bad' THEN 1 WHEN 'average' THEN 2 WHEN 'good' THEN 3 END"),
+        default => $query->latest(),
+    };
+
+    return $query->get();
 });
 
 $resetFilters = function () {
-    $this->reset(['search', 'rating', 'groupId', 'tagId']);
+    $this->reset(['search', 'rating', 'groupId', 'tagId', 'sortBy']);
 };
 
 $hasFilters = computed(function () {
-    return $this->search !== '' || $this->rating !== '' || $this->groupId !== '' || $this->tagId !== '';
+    return $this->search !== '' || $this->rating !== '' || $this->groupId !== '' || $this->tagId !== '' || $this->sortBy !== '';
 });
 
 ?>
@@ -66,7 +76,7 @@ $hasFilters = computed(function () {
 <div>
     {{-- Filter Bar --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
             {{-- Search --}}
             <div class="lg:col-span-2">
                 <input
@@ -113,6 +123,21 @@ $hasFilters = computed(function () {
                     @foreach ($this->tags as $tag)
                         <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                     @endforeach
+                </select>
+            </div>
+
+            {{-- Sort --}}
+            <div>
+                <select
+                    wire:model.live="sortBy"
+                    class="px-2 py-2 w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
+                >
+                    <option value="">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="name_asc">Name A–Z</option>
+                    <option value="name_desc">Name Z–A</option>
+                    <option value="rating_best">Rating: Best</option>
+                    <option value="rating_worst">Rating: Worst</option>
                 </select>
             </div>
         </div>
