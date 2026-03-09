@@ -7,6 +7,7 @@ use function Livewire\Volt\{computed, state};
 state([
     'search' => '',
     'tagId' => '',
+    'sortBy' => '',
 ])->url();
 
 $tags = computed(function () {
@@ -31,15 +32,24 @@ $groups = computed(function () {
         $query->whereHas('tags', fn ($q) => $q->where('tags.id', $this->tagId));
     }
 
-    return $query->orderBy('name')->get();
+    match ($this->sortBy) {
+        'oldest' => $query->oldest(),
+        'name_asc' => $query->orderBy('name'),
+        'name_desc' => $query->orderBy('name', 'desc'),
+        'most_sites' => $query->withCount('websites')->orderByDesc('websites_count'),
+        'fewest_sites' => $query->withCount('websites')->orderBy('websites_count'),
+        default => $query->latest(),
+    };
+
+    return $query->get();
 });
 
 $resetFilters = function () {
-    $this->reset(['search', 'tagId']);
+    $this->reset(['search', 'tagId', 'sortBy']);
 };
 
 $hasFilters = computed(function () {
-    return $this->search !== '' || $this->tagId !== '';
+    return $this->search !== '' || $this->tagId !== '' || $this->sortBy !== '';
 });
 
 ?>
@@ -47,7 +57,7 @@ $hasFilters = computed(function () {
 <div>
     {{-- Filter Bar --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {{-- Search --}}
             <div class="lg:col-span-2">
                 <input
@@ -68,6 +78,21 @@ $hasFilters = computed(function () {
                     @foreach ($this->tags as $tag)
                         <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                     @endforeach
+                </select>
+            </div>
+
+            {{-- Sort --}}
+            <div>
+                <select
+                    wire:model.live="sortBy"
+                    class="px-2 py-2 w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm focus:border-amber-500 focus:ring-amber-500"
+                >
+                    <option value="">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="name_asc">Name A–Z</option>
+                    <option value="name_desc">Name Z–A</option>
+                    <option value="most_sites">Most Websites</option>
+                    <option value="fewest_sites">Fewest Websites</option>
                 </select>
             </div>
         </div>
