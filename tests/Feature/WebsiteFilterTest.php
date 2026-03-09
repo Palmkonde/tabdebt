@@ -122,8 +122,8 @@ it('resets all filters including sort', function () {
 
     Volt::test('website-filter')
         ->set('search', 'Laravel')
-        ->set('sortBy', 'name_asc')
         ->assertDontSee('Tailwind')
+        ->set('sortBy', 'name_asc')
         ->call('resetFilters')
         ->assertSet('search', '')
         ->assertSet('rating', '')
