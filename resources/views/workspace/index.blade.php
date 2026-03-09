@@ -54,7 +54,7 @@
                 </div>
                 <div class="flex flex-wrap gap-2 mt-3">
                     @foreach ($tags as $tag)
-                        <a href="{{ route('tags.show', $tag) }}" class="text-sm bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 px-3 py-1 rounded-full hover:bg-amber-200 dark:hover:bg-amber-800 transition-colors">{{ $tag->name }}</a>
+                        <x-tag-pill :tag="$tag" />
                     @endforeach
                 </div>
             </div>
