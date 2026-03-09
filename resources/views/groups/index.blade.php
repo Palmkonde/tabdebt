@@ -16,58 +16,8 @@
             </a>
         </div>
 
-        <div class="mt-8 space-y-6">
-            @foreach ($groups as $group)
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
-
-                    {{-- Group header --}}
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ $group->name }}</h2>
-                            @if ($group->description)
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $group->description }}</p>
-                            @endif
-                            @if ($group->tags->isNotEmpty())
-                                <div class="flex flex-wrap gap-1 mt-2">
-                                    @foreach ($group->tags as $tag)
-                                        <x-tag-pill :tag="$tag" />
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <span class="text-xs font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
-                                {{ $group->websites->count() }} {{ Str::plural('site', $group->websites->count()) }}
-                            </span>
-                            
-                            @if($group->name !== 'Other')
-                                <a href="{{ route('groups.edit', $group) }}" class="text-sm text-amber-600 dark:text-amber-400 hover:underline">Edit</a>
-                            @endif 
-
-                            <form action="{{ route('groups.destroy', $group) }}" method="POST" onsubmit="return confirm('Are you sure?')">
-                                @csrf
-                                @method('DELETE')
-                                
-                                @if($group->name !== 'Other')
-                                    <button type="submit" class="text-sm text-red-600 dark:text-red-400 hover:underline">Delete</button>
-                                @endif 
-                            </form>
-                        </div>
-                    </div>
-
-                    {{-- Websites inside this group --}}
-                    @if ($group->websites->isEmpty())
-                        <p class="text-sm text-gray-400 dark:text-gray-500 italic">No websites in this group yet.</p>
-                    @else
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            @foreach ($group->websites as $website)
-                                <x-website-card :website="$website" :group="$group" />
-                            @endforeach
-                        </div>
-                    @endif
-
-                </div>
-            @endforeach
+        <div class="mt-8">
+            <livewire:group-filter />
         </div>
 
     </div>
