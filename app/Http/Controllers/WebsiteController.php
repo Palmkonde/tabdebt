@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Website;
 use App\Models\Tag;
-
+use App\Models\Website;
 use Illuminate\Http\Request;
 
 class WebsiteController extends Controller

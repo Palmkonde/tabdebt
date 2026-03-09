@@ -8,14 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Website extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
-    public function group() {
+    public function group()
+    {
         return $this->belongsTo(Group::class);
     }
 
-    public function tags() {
+    public function tags()
+    {
         return $this->morphToMany(Tag::class, 'taggable');
     }
 }

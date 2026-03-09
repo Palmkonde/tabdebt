@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Tag;
-use App\Models\Website;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
@@ -64,9 +63,10 @@ class GroupController extends Controller
         $group = $this->findAuthorizedGroup($id);
         $defaultGroup = $this->findDefaultGroup();
         $group->load('tags');
-        
-        if($group->id === $defaultGroup->id) {
+
+        if ($group->id === $defaultGroup->id) {
             abort(403, 'Unable to edit the default group.');
+
             return redirect()->route('groups.index');
         }
 

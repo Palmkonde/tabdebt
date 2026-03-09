@@ -4,9 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Group;
 use App\Models\Tag;
-use App\Models\Website;
 use App\Models\User;
-
+use App\Models\Website;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -20,12 +19,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $palm =User::create([
+        $palm = User::create([
             'name' => 'Palm',
             'email' => 'palm@example.com',
-            'password' => Hash::make('password')
+            'password' => Hash::make('password'),
         ]);
-        
+
         $tags = Tag::factory()->count(20)->create();
 
         Group::factory()

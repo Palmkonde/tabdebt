@@ -19,8 +19,7 @@ class Navbar extends Component
             ['name' => 'Groups', 'url' => '/groups'],
             ['name' => 'Tags', 'url' => '/tags'],
         ]
-    )
-    {
+    ) {
         //
     }
 

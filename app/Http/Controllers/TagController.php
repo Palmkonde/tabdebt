@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Tag;
+use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
@@ -13,7 +13,7 @@ class TagController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         $groupIds = $user->groups()->pluck('id');
 
         $tags = Tag::where(function ($query) use ($groupIds) {
@@ -60,14 +60,14 @@ class TagController extends Controller
     public function show(string $id)
     {
         $user = auth()->user();
-        $groupIds = $user->groups()->pluck('id'); 
-        
+        $groupIds = $user->groups()->pluck('id');
+
         $tag = $this->findAuthorizedTag($id);
-        
+
         $websites = $tag->websites()->whereIn('group_id', $groupIds)
             ->with('tags')
             ->get();
-        
+
         $groups = $tag->groups()->whereIn('groups.id', $groupIds)
             ->withCount('websites')
             ->with('tags')
@@ -104,14 +104,15 @@ class TagController extends Controller
         $tag = $this->findAuthorizedTag($id);
 
         $tag->delete();
-        return redirect()->route('tags.index'); 
+
+        return redirect()->route('tags.index');
     }
-    
+
     private function findAuthorizedTag($id)
     {
         $user = auth()->user();
         $groupIds = $user->groups()->pluck('id');
-        
+
         return Tag::where('id', $id)->where(function ($query) use ($groupIds) {
             $query->whereHas('websites', function ($q) use ($groupIds) {
                 $q->whereIn('group_id', $groupIds);

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            
+
             $table->string('name', 255);
             $table->string('color', 7)->default('#FFFFFF'); // Hex color code
-            
+
             $table->timestamps();
         });
     }

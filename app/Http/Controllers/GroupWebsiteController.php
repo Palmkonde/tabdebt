@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class GroupWebsiteController extends Controller
 {
     public function removeWebsite(Group $group, Website $website)
@@ -15,10 +13,11 @@ class GroupWebsiteController extends Controller
 
         return redirect()->route('groups.index');
     }
-    
+
     private function findDefaultGroup()
     {
         $user = auth()->user();
+
         return $user->groups()->where('name', 'Other')->firstOrFail();
     }
 }

@@ -14,8 +14,7 @@ class Status extends Component
     public function __construct(
         public string $countNum,
         public string $label
-    )
-    {
+    ) {
         //
     }
 

@@ -45,9 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
-    protected static function booted() {
-     
+
+    protected static function booted()
+    {
+
         static::created(function (User $user) {
             $user->groups()->create([
                 'name' => 'Other',
@@ -55,10 +56,11 @@ class User extends Authenticatable
         });
     }
 
-    public function groups() {
+    public function groups()
+    {
         return $this->hasMany(Group::class, 'user_id', 'id');
     }
-    
+
     public function isOwnerOfGroup($groupId)
     {
         return $this->groups()->where('id', $groupId)->exists();
