@@ -4,14 +4,7 @@
 <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        {{-- Back link --}}
-        <a href="{{ route('tags.index') }}"
-           class="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors mb-6 group">
-            <svg class="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-            Back to Tags
-        </a>
+        <x-back-link :href="route('tags.index')" label="Back to Tags" />
 
         {{-- Tag hero header --}}
         <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow overflow-hidden mb-10">
@@ -138,11 +131,7 @@
                                 @if ($group->tags->where('id', '!=', $tag->id)->isNotEmpty())
                                     <div class="flex flex-wrap gap-1 mt-3">
                                         @foreach ($group->tags->where('id', '!=', $tag->id) as $otherTag)
-                                            <a href="{{ route('tags.show', $otherTag) }}"
-                                               class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 hover:text-amber-700 dark:hover:text-amber-300 transition-colors">
-                                                <span class="w-2 h-2 rounded-full shrink-0" style="background-color: {{ $otherTag->color }};"></span>
-                                                {{ $otherTag->name }}
-                                            </a>
+                                            <x-tag-pill :tag="$otherTag" />
                                         @endforeach
                                     </div>
                                 @endif
