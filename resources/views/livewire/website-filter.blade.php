@@ -3,7 +3,9 @@
 use App\Models\Tag;
 use App\Models\Website;
 
-use function Livewire\Volt\{computed, state};
+use function Livewire\Volt\{computed, state, updated, usesPagination};
+
+usesPagination();
 
 state([
     'search' => '',
@@ -12,6 +14,16 @@ state([
     'tagId' => '',
     'sortBy' => '',
 ])->url();
+
+$resetPageOnFilterChange = fn () => $this->resetPage();
+
+updated([
+    'search' => $resetPageOnFilterChange,
+    'rating' => $resetPageOnFilterChange,
+    'groupId' => $resetPageOnFilterChange,
+    'tagId' => $resetPageOnFilterChange,
+    'sortBy' => $resetPageOnFilterChange,
+]);
 
 $groups = computed(function () {
     return auth()->user()->groups()->orderBy('name')->get();
@@ -60,11 +72,12 @@ $websites = computed(function () {
         default => $query->latest(),
     };
 
-    return $query->get();
+    return $query->paginate(12);
 });
 
 $resetFilters = function () {
     $this->reset(['search', 'rating', 'groupId', 'tagId', 'sortBy']);
+    $this->resetPage();
 };
 
 $hasFilters = computed(function () {
@@ -146,7 +159,7 @@ $hasFilters = computed(function () {
         @if ($this->hasFilters)
             <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Showing {{ $this->websites->count() }} {{ Str::plural('website', $this->websites->count()) }}
+                    Showing {{ $this->websites->total() }} {{ Str::plural('website', $this->websites->total()) }}
                 </p>
                 <button
                     wire:click="resetFilters"
@@ -175,5 +188,10 @@ $hasFilters = computed(function () {
                 @endif
             </div>
         @endforelse
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-6">
+        {{ $this->websites->links() }}
     </div>
 </div>
