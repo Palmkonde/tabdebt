@@ -127,11 +127,11 @@
                                     <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ $group->description }}</p>
                                 @endif
 
-                                {{-- Other tags on this group --}}
-                                @if ($group->tags->where('id', '!=', $tag->id)->isNotEmpty())
+                                {{-- Tags on this group --}}
+                                @if ($group->tags->isNotEmpty())
                                     <div class="flex flex-wrap gap-1 mt-3">
-                                        @foreach ($group->tags->where('id', '!=', $tag->id) as $otherTag)
-                                            <x-tag-pill :tag="$otherTag" />
+                                        @foreach ($group->tags as $groupTag)
+                                            <x-tag-pill :tag="$groupTag" />
                                         @endforeach
                                     </div>
                                 @endif
