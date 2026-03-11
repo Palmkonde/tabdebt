@@ -85,7 +85,11 @@ class TagController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $tag = $this->findAuthorizedTag($id);
+
+        return view('tags.edit', [
+            'tag' => $tag,
+        ]);
     }
 
     /**
@@ -93,7 +97,12 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $tag = $this->findAuthorizedTag($id);
+        $validated = $this->validateRequest($request);
+
+        $tag->update($validated);
+
+        return redirect()->route('tags.show', $tag);
     }
 
     /**
@@ -106,6 +115,14 @@ class TagController extends Controller
         $tag->delete();
 
         return redirect()->route('tags.index');
+    }
+
+    private function validateRequest(Request $request)
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'color' => 'required|string|size:7|regex:/^#[0-9A-Fa-f]{6}$/',
+        ]);
     }
 
     private function findAuthorizedTag($id)
