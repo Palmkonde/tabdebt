@@ -28,7 +28,16 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $this->validateRequest($request);
+
+        $tag = Tag::create($validated);
+
+        // Return JSON for inline Tom Select AJAX creation, otherwise redirect.
+        if ($request->expectsJson()) {
+            return response()->json($tag);
+        }
+
+        return redirect()->route('tags.index');
     }
 
     /**
@@ -98,7 +107,7 @@ class TagController extends Controller
     {
         return $request->validate([
             'name' => 'required|string|max:255',
-            'color' => 'required|string|size:7|regex:/^#[0-9A-Fa-f]{6}$/',
+            'color' => 'sometimes|string|size:7|regex:/^#[0-9A-Fa-f]{6}$/',
         ]);
     }
 
