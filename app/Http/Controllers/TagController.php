@@ -12,30 +12,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-
-        $groupIds = $user->groups()->pluck('id');
-
-        $tags = Tag::where(function ($query) use ($groupIds) {
-            $query->whereHas('websites', function ($q) use ($groupIds) {
-                $q->whereIn('group_id', $groupIds);
-            })->orWhereHas('groups', function ($q) use ($groupIds) {
-                $q->whereIn('groups.id', $groupIds);
-            });
-        })
-            ->withCount([
-                'websites' => function ($q) use ($groupIds) {
-                    $q->whereIn('group_id', $groupIds);
-                },
-                'groups' => function ($q) use ($groupIds) {
-                    $q->whereIn('groups.id', $groupIds);
-                },
-            ])
-            ->get();
-
-        return view('tags.index', [
-            'tags' => $tags,
-        ]);
+        return view('tags.index');
     }
 
     /**
