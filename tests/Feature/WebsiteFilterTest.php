@@ -27,13 +27,13 @@ it('shows all user websites by default', function () {
 });
 
 it('filters websites by search term', function () {
-    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Laravel']);
-    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'Tailwind']);
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'SiteAlpha', 'url' => 'https://alpha.test', 'description' => 'First site']);
+    Website::factory()->create(['group_id' => $this->group->id, 'name' => 'SiteBravo', 'url' => 'https://bravo.test', 'description' => 'Second site']);
 
     Volt::test('website-filter')
-        ->set('search', 'Laravel')
-        ->assertSee('Laravel')
-        ->assertDontSee('Tailwind');
+        ->set('search', 'SiteAlpha')
+        ->assertSee('SiteAlpha')
+        ->assertDontSee('SiteBravo');
 });
 
 it('filters websites by url', function () {

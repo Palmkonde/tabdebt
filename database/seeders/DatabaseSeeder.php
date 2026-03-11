@@ -30,27 +30,25 @@ class DatabaseSeeder extends Seeder
         Group::factory()
             ->count(3)
             ->for($palm)
-            ->hasAttached($tags->random(3))
-            ->has(
-                Website::factory()
-                    ->hasAttached($tags->random(2))
-                    ->count(5)
-            )
+            ->has(Website::factory()->count(5))
+            ->afterCreating(function (Group $group) use ($tags) {
+                $group->tags()->attach($tags->random(3));
+                $group->websites->each(function (Website $website) use ($tags) {
+                    $website->tags()->attach($tags->random(2));
+                });
+            })
             ->create();
 
         User::factory(10)
             ->has(
                 Group::factory()
-                    ->hasAttached(
-                        $tags->random(3)
-                    )
-                    ->has(
-                        Website::factory()
-                            ->hasAttached(
-                                $tags->random(2)
-                            )
-                            ->count(5)
-                    )
+                    ->has(Website::factory()->count(5))
+                    ->afterCreating(function (Group $group) use ($tags) {
+                        $group->tags()->attach($tags->random(3));
+                        $group->websites->each(function (Website $website) use ($tags) {
+                            $website->tags()->attach($tags->random(2));
+                        });
+                    })
                     ->count(3)
             )
             ->create();

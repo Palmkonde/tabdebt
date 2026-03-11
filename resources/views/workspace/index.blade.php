@@ -34,7 +34,7 @@
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Groups</h2>
-                    <a href="#" class="text-sm text-amber-600 dark:text-amber-400 hover:underline">View all</a>
+                    <a href="{{ route('groups.index') }}" class="text-sm text-amber-600 dark:text-amber-400 hover:underline">View all</a>
                 </div>
                 <ul class="mt-3 divide-y divide-gray-200 dark:divide-gray-700">
                     @foreach($groups as $group)

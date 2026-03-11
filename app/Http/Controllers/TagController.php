@@ -12,30 +12,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-
-        $groupIds = $user->groups()->pluck('id');
-
-        $tags = Tag::where(function ($query) use ($groupIds) {
-            $query->whereHas('websites', function ($q) use ($groupIds) {
-                $q->whereIn('group_id', $groupIds);
-            })->orWhereHas('groups', function ($q) use ($groupIds) {
-                $q->whereIn('groups.id', $groupIds);
-            });
-        })
-            ->withCount([
-                'websites' => function ($q) use ($groupIds) {
-                    $q->whereIn('group_id', $groupIds);
-                },
-                'groups' => function ($q) use ($groupIds) {
-                    $q->whereIn('groups.id', $groupIds);
-                },
-            ])
-            ->get();
-
-        return view('tags.index', [
-            'tags' => $tags,
-        ]);
+        return view('tags.index');
     }
 
     /**
@@ -85,7 +62,11 @@ class TagController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $tag = $this->findAuthorizedTag($id);
+
+        return view('tags.edit', [
+            'tag' => $tag,
+        ]);
     }
 
     /**
@@ -93,7 +74,12 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $tag = $this->findAuthorizedTag($id);
+        $validated = $this->validateRequest($request);
+
+        $tag->update($validated);
+
+        return redirect()->route('tags.show', $tag);
     }
 
     /**
@@ -106,6 +92,14 @@ class TagController extends Controller
         $tag->delete();
 
         return redirect()->route('tags.index');
+    }
+
+    private function validateRequest(Request $request)
+    {
+        return $request->validate([
+            'name' => 'required|string|max:255',
+            'color' => 'required|string|size:7|regex:/^#[0-9A-Fa-f]{6}$/',
+        ]);
     }
 
     private function findAuthorizedTag($id)
