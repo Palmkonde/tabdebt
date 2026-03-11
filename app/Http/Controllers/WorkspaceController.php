@@ -21,6 +21,7 @@ class WorkspaceController extends Controller
             'name' => $user->name,
             'websiteCount' => Website::whereIn('group_id', $user->groups()->pluck('id'))->count(),
             'groupCount' => $user->groups()->count(),
+            'tagCount' => $tags->count(),
             'recentWebsites' => Website::whereIn('group_id', $user->groups()->pluck('id'))
                 ->latest()
                 ->take(3)

@@ -25,17 +25,20 @@ it('shows the user name', function () {
         ->assertSee("Palm's Workspace", false);
 });
 
-it('shows website and group counts', function () {
+it('shows website, group, and tag counts', function () {
     $user = User::factory()->create();
     $group = $user->groups()->first();
 
     Website::factory()->count(3)->create(['group_id' => $group->id]);
+    $tags = Tag::factory()->count(2)->create();
+    $group->tags()->attach($tags);
 
     $this->actingAs($user)
         ->get('/workspace')
         ->assertSee('3')
         ->assertSee('Websites')
-        ->assertSee('Groups');
+        ->assertSee('Groups')
+        ->assertSee('Tags');
 });
 
 it('shows recent websites', function () {

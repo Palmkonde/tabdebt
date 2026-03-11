@@ -8,9 +8,10 @@
         <p class="text-gray-500 dark:text-gray-400 mt-1">Welcome to your workspace, {{ $name }}! Here you can manage your websites and view your status.</p>
 
         {{-- Stats --}}
-        <section class="mt-8 grid grid-cols-2 gap-4">
+        <section class="mt-8 grid grid-cols-3 gap-4">
             <x-status countNum="{{ $websiteCount }}" label="Websites" />
             <x-status countNum="{{ $groupCount }}" label="Groups" />
+            <x-status countNum="{{ $tagCount }}" label="Tags" />
         </section>
 
         {{-- Recent Websites --}}
