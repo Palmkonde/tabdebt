@@ -14,7 +14,7 @@ class GroupWebsiteController extends Controller
         $defaultGroup = $this->findDefaultGroup();
         $website->update(['group_id' => $defaultGroup->id]);
 
-        return redirect()->route('groups.index');
+        return redirect()->route('groups.index')->with('success', 'Website removed from group.');
     }
 
     private function findDefaultGroup()

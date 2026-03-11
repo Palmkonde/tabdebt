@@ -2,12 +2,21 @@
 
 use App\Models\Tag;
 
-use function Livewire\Volt\{computed, state};
+use function Livewire\Volt\{computed, state, updated, usesPagination};
+
+usesPagination();
 
 state([
     'search' => '',
     'sortBy' => '',
 ])->url();
+
+$resetPageOnFilterChange = fn () => $this->resetPage();
+
+updated([
+    'search' => $resetPageOnFilterChange,
+    'sortBy' => $resetPageOnFilterChange,
+]);
 
 $tags = computed(function () {
     $groupIds = auth()->user()->groups()->pluck('id');
@@ -36,11 +45,12 @@ $tags = computed(function () {
         default => $query->latest(),
     };
 
-    return $query->get();
+    return $query->paginate(12);
 });
 
 $resetFilters = function () {
     $this->reset(['search', 'sortBy']);
+    $this->resetPage();
 };
 
 $hasFilters = computed(function () {
@@ -85,7 +95,7 @@ $hasFilters = computed(function () {
         @if ($this->hasFilters)
             <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Showing {{ $this->tags->count() }} {{ Str::plural('tag', $this->tags->count()) }}
+                    Showing {{ $this->tags->total() }} {{ Str::plural('tag', $this->tags->total()) }}
                 </p>
                 <button
                     wire:click="resetFilters"
@@ -153,5 +163,10 @@ $hasFilters = computed(function () {
                 @endif
             </div>
         @endforelse
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-6">
+        {{ $this->tags->links() }}
     </div>
 </div>

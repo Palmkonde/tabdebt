@@ -19,7 +19,8 @@ it('removes a website from a group by moving it to Other', function () {
 
     $this->actingAs($this->user)
         ->delete("/groups/{$group->id}/websites/{$website->id}")
-        ->assertRedirect(route('groups.index'));
+        ->assertRedirect(route('groups.index'))
+        ->assertSessionHas('success', 'Website removed from group.');
 
     expect($website->fresh()->group_id)->toBe($this->defaultGroup->id);
 });

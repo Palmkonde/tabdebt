@@ -36,7 +36,7 @@ class WebsiteController extends Controller
         $website = Website::create(collect($validated)->except('tags')->toArray());
         $website->tags()->sync($request->input('tags', []));
 
-        return redirect()->route('websites.index');
+        return redirect()->route('websites.index')->with('success', 'Website created.');
     }
 
     /**
@@ -73,7 +73,7 @@ class WebsiteController extends Controller
         $website->update(collect($validated)->except('tags')->toArray());
         $website->tags()->sync($request->input('tags', []));
 
-        return redirect()->route('websites.index');
+        return redirect()->route('websites.index')->with('success', 'Website updated.');
     }
 
     /**
@@ -84,7 +84,7 @@ class WebsiteController extends Controller
         $website = $this->findAuthorizedWebsite($id);
         $website->delete();
 
-        return redirect()->route('websites.index');
+        return redirect()->route('websites.index')->with('success', 'Website deleted.');
     }
 
     private function validateWebsite(Request $request): array

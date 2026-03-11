@@ -72,7 +72,8 @@ it('stores a new website', function () {
             'group_id' => $this->group->id,
             'tags' => [$tag->id],
         ])
-        ->assertRedirect(route('websites.index'));
+        ->assertRedirect(route('websites.index'))
+        ->assertSessionHas('success', 'Website created.');
 
     $this->assertDatabaseHas('websites', [
         'name' => 'Laravel',
@@ -171,7 +172,8 @@ it('updates a website', function () {
             'rating' => 'bad',
             'group_id' => $this->group->id,
         ])
-        ->assertRedirect(route('websites.index'));
+        ->assertRedirect(route('websites.index'))
+        ->assertSessionHas('success', 'Website updated.');
 
     $this->assertDatabaseHas('websites', [
         'id' => $website->id,
@@ -219,7 +221,8 @@ it('deletes a website', function () {
 
     $this->actingAs($this->user)
         ->delete("/websites/{$website->id}")
-        ->assertRedirect(route('websites.index'));
+        ->assertRedirect(route('websites.index'))
+        ->assertSessionHas('success', 'Website deleted.');
 
     $this->assertDatabaseMissing('websites', ['id' => $website->id]);
 });

@@ -39,7 +39,7 @@ class GroupController extends Controller
 
         $group->tags()->sync($request->input('tags', []));
 
-        return redirect()->route('groups.index');
+        return redirect()->route('groups.index')->with('success', 'Group created.');
     }
 
     /**
@@ -92,7 +92,7 @@ class GroupController extends Controller
 
         $group->tags()->sync($request->input('tags', []));
 
-        return redirect()->route('groups.index');
+        return redirect()->route('groups.index')->with('success', 'Group updated.');
     }
 
     /**
@@ -119,7 +119,7 @@ class GroupController extends Controller
 
         $group->delete();
 
-        return redirect()->route('groups.index');
+        return redirect()->route('groups.index')->with('success', 'Group deleted.');
     }
 
     private function validateGroup(Request $request): array

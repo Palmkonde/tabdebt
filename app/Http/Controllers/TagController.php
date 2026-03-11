@@ -37,7 +37,7 @@ class TagController extends Controller
             return response()->json($tag);
         }
 
-        return redirect()->route('tags.index');
+        return redirect()->route('tags.index')->with('success', 'Tag created.');
     }
 
     /**
@@ -88,7 +88,7 @@ class TagController extends Controller
 
         $tag->update($validated);
 
-        return redirect()->route('tags.show', $tag);
+        return redirect()->route('tags.show', $tag)->with('success', 'Tag updated.');
     }
 
     /**
@@ -100,7 +100,7 @@ class TagController extends Controller
 
         $tag->delete();
 
-        return redirect()->route('tags.index');
+        return redirect()->route('tags.index')->with('success', 'Tag deleted.');
     }
 
     private function validateRequest(Request $request)

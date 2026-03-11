@@ -109,7 +109,8 @@ it('deletes a tag', function () {
 
     $this->actingAs($this->user)
         ->delete("/tags/{$tag->id}")
-        ->assertRedirect(route('tags.index'));
+        ->assertRedirect(route('tags.index'))
+        ->assertSessionHas('success', 'Tag deleted.');
 
     $this->assertDatabaseMissing('tags', ['id' => $tag->id]);
 });

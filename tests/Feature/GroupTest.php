@@ -59,7 +59,8 @@ it('stores a new group', function () {
             'name' => 'Dev Tools',
             'description' => 'Development tools',
         ])
-        ->assertRedirect(route('groups.index'));
+        ->assertRedirect(route('groups.index'))
+        ->assertSessionHas('success', 'Group created.');
 
     $this->assertDatabaseHas('groups', [
         'name' => 'Dev Tools',
@@ -145,7 +146,8 @@ it('updates a group', function () {
             'name' => 'New Name',
             'description' => 'Updated',
         ])
-        ->assertRedirect(route('groups.index'));
+        ->assertRedirect(route('groups.index'))
+        ->assertSessionHas('success', 'Group updated.');
 
     $this->assertDatabaseHas('groups', [
         'id' => $group->id,
@@ -185,7 +187,8 @@ it('deletes a group and moves websites to Other', function () {
 
     $this->actingAs($this->user)
         ->delete("/groups/{$group->id}")
-        ->assertRedirect(route('groups.index'));
+        ->assertRedirect(route('groups.index'))
+        ->assertSessionHas('success', 'Group deleted.');
 
     $this->assertDatabaseMissing('groups', ['id' => $group->id]);
     expect($website->fresh()->group_id)->toBe($this->defaultGroup->id);
