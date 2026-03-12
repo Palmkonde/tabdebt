@@ -22,6 +22,8 @@ class GroupFactory extends Factory
         ['name' => 'Backend', 'description' => 'Backend tools and frameworks'],
     ];
 
+    private static int $index = 0;
+
     /**
      * Define the model's default state.
      *
@@ -29,7 +31,8 @@ class GroupFactory extends Factory
      */
     public function definition(): array
     {
-        $group = $this->faker->randomElement(self::$groups);
+        $group = self::$groups[self::$index % count(self::$groups)];
+        self::$index++;
 
         return [
             'name' => $group['name'],

@@ -29,51 +29,16 @@ $groups = computed(function () {
     return auth()->user()->groups()->orderBy('name')->get();
 });
 
-$tags = computed(function () {
-    $groupIds = auth()->user()->groups()->pluck('id');
+$tags = computed(fn () => Tag::visibleToUser(auth()->user())->orderBy('name')->get());
 
-    return Tag::where(function ($query) use ($groupIds) {
-        $query->whereHas('websites', fn ($q) => $q->whereIn('group_id', $groupIds))
-            ->orWhereHas('groups', fn ($q) => $q->whereIn('groups.id', $groupIds));
-    })->orderBy('name')->get();
-});
-
-$websites = computed(function () {
-    $groupIds = auth()->user()->groups()->pluck('id');
-
-    $query = Website::with('tags')
-        ->whereIn('group_id', $groupIds);
-
-    if ($this->search !== '') {
-        $query->where(function ($q) {
-            $q->where('name', 'like', '%' . $this->search . '%')
-                ->orWhere('url', 'like', '%' . $this->search . '%');
-        });
-    }
-
-    if ($this->rating !== '') {
-        $query->where('rating', $this->rating);
-    }
-
-    if ($this->groupId !== '') {
-        $query->where('group_id', $this->groupId);
-    }
-
-    if ($this->tagId !== '') {
-        $query->whereHas('tags', fn ($q) => $q->where('tags.id', $this->tagId));
-    }
-
-    match ($this->sortBy) {
-        'oldest' => $query->oldest(),
-        'name_asc' => $query->orderBy('name'),
-        'name_desc' => $query->orderBy('name', 'desc'),
-        'rating_best' => $query->orderByRaw("CASE rating WHEN 'good' THEN 1 WHEN 'average' THEN 2 WHEN 'bad' THEN 3 END"),
-        'rating_worst' => $query->orderByRaw("CASE rating WHEN 'bad' THEN 1 WHEN 'average' THEN 2 WHEN 'good' THEN 3 END"),
-        default => $query->latest(),
-    };
-
-    return $query->paginate(12);
-});
+$websites = computed(fn () => Website::with('tags')
+    ->forUser(auth()->user())
+    ->search($this->search)
+    ->filterByRating($this->rating)
+    ->filterByGroup($this->groupId)
+    ->filterByTag($this->tagId)
+    ->sorted($this->sortBy)
+    ->paginate(12));
 
 $resetFilters = function () {
     $this->reset(['search', 'rating', 'groupId', 'tagId', 'sortBy']);

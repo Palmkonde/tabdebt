@@ -20,39 +20,14 @@ updated([
     'sortBy' => $resetPageOnFilterChange,
 ]);
 
-$tags = computed(function () {
-    $groupIds = auth()->user()->groups()->pluck('id');
+$tags = computed(fn () => Tag::visibleToUser(auth()->user(), includeWebsiteTags: false)->orderBy('name')->get());
 
-    return Tag::whereHas('groups', fn ($q) => $q->whereIn('groups.id', $groupIds))
-        ->orderBy('name')
-        ->get();
-});
-
-$groups = computed(function () {
-    $query = auth()->user()->groups()->with(['tags', 'websites.tags']);
-
-    if ($this->search !== '') {
-        $query->where(function ($q) {
-            $q->where('name', 'like', '%' . $this->search . '%')
-                ->orWhere('description', 'like', '%' . $this->search . '%');
-        });
-    }
-
-    if ($this->tagId !== '') {
-        $query->whereHas('tags', fn ($q) => $q->where('tags.id', $this->tagId));
-    }
-
-    match ($this->sortBy) {
-        'oldest' => $query->oldest(),
-        'name_asc' => $query->orderBy('name'),
-        'name_desc' => $query->orderBy('name', 'desc'),
-        'most_sites' => $query->withCount('websites')->orderByDesc('websites_count'),
-        'fewest_sites' => $query->withCount('websites')->orderBy('websites_count'),
-        default => $query->latest(),
-    };
-
-    return $query->paginate(10);
-});
+$groups = computed(fn () => auth()->user()->groups()
+    ->with(['tags', 'websites.tags'])
+    ->search($this->search)
+    ->filterByTag($this->tagId)
+    ->sorted($this->sortBy)
+    ->paginate(10));
 
 $resetFilters = function () {
     $this->reset(['search', 'tagId', 'sortBy']);

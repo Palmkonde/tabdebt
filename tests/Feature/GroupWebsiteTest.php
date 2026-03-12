@@ -13,6 +13,18 @@ it('requires authentication', function () {
     $this->delete('/groups/1/websites/1')->assertRedirect('/login');
 });
 
+it('forbids removing another users website', function () {
+    $otherUser = User::factory()->create();
+    $otherGroup = Group::factory()->create(['user_id' => $otherUser->id]);
+    $otherWebsite = Website::factory()->create(['group_id' => $otherGroup->id]);
+
+    $this->actingAs($this->user)
+        ->delete("/groups/{$otherGroup->id}/websites/{$otherWebsite->id}")
+        ->assertForbidden();
+
+    expect($otherWebsite->fresh()->group_id)->toBe($otherGroup->id);
+});
+
 it('removes a website from a group by moving it to Other', function () {
     $group = Group::factory()->create(['user_id' => $this->user->id]);
     $website = Website::factory()->create(['group_id' => $group->id]);

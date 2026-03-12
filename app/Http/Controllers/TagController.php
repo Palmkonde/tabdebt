@@ -46,15 +46,13 @@ class TagController extends Controller
     public function show(string $id)
     {
         $user = auth()->user();
-        $groupIds = $user->groups()->pluck('id');
-
         $tag = $this->findAuthorizedTag($id);
 
-        $websites = $tag->websites()->whereIn('group_id', $groupIds)
+        $websites = $tag->websites()->forUser($user)
             ->with('tags')
             ->get();
 
-        $groups = $tag->groups()->whereIn('groups.id', $groupIds)
+        $groups = $tag->groups()->whereIn('groups.id', $user->groups()->pluck('id'))
             ->withCount('websites')
             ->with('tags')
             ->get();
@@ -106,22 +104,13 @@ class TagController extends Controller
     private function validateRequest(Request $request)
     {
         return $request->validate([
-            'name' => 'required|string|max:255',
-            'color' => 'sometimes|string|size:7|regex:/^#[0-9A-Fa-f]{6}$/',
+            'name' => ['required', 'string', 'max:255'],
+            'color' => ['sometimes', 'string', 'size:7', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
     }
 
     private function findAuthorizedTag($id)
     {
-        $user = auth()->user();
-        $groupIds = $user->groups()->pluck('id');
-
-        return Tag::where('id', $id)->where(function ($query) use ($groupIds) {
-            $query->whereHas('websites', function ($q) use ($groupIds) {
-                $q->whereIn('group_id', $groupIds);
-            })->orWhereHas('groups', function ($q) use ($groupIds) {
-                $q->whereIn('groups.id', $groupIds);
-            });
-        })->firstOrFail();
+        return Tag::visibleToUser(auth()->user())->findOrFail($id);
     }
 }

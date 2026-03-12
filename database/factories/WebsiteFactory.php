@@ -37,6 +37,8 @@ class WebsiteFactory extends Factory
         ['name' => 'Heroku', 'url' => 'https://heroku.com', 'description' => 'Cloud application platform'],
     ];
 
+    private static int $index = 0;
+
     /**
      * Define the model's default state.
      *
@@ -44,7 +46,8 @@ class WebsiteFactory extends Factory
      */
     public function definition(): array
     {
-        $site = $this->faker->randomElement(self::$websites);
+        $site = self::$websites[self::$index % count(self::$websites)];
+        self::$index++;
 
         return [
             'name' => $site['name'],

@@ -9,8 +9,12 @@ class GroupWebsiteController extends Controller
 {
     public function removeWebsite(Group $group, Website $website)
     {
-        // Remove from current group and change it to "Other"
         $user = auth()->user();
+
+        if (! $user->isOwnerOfGroup($group->id) || ! $user->isOwnerOfGroup($website->group_id)) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $defaultGroup = $this->findDefaultGroup();
         $website->update(['group_id' => $defaultGroup->id]);
 
