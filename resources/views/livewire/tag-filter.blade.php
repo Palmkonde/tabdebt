@@ -18,35 +18,11 @@ updated([
     'sortBy' => $resetPageOnFilterChange,
 ]);
 
-$tags = computed(function () {
-    $groupIds = auth()->user()->groups()->pluck('id');
-
-    $query = Tag::where(function ($q) use ($groupIds) {
-        $q->whereHas('websites', fn ($w) => $w->whereIn('group_id', $groupIds))
-            ->orWhereHas('groups', fn ($g) => $g->whereIn('groups.id', $groupIds));
-    })
-        ->withCount([
-            'websites' => fn ($q) => $q->whereIn('group_id', $groupIds),
-            'groups' => fn ($q) => $q->whereIn('groups.id', $groupIds),
-        ]);
-
-    if ($this->search !== '') {
-        $query->where('name', 'like', '%' . $this->search . '%');
-    }
-
-    match ($this->sortBy) {
-        'oldest' => $query->oldest(),
-        'name_asc' => $query->orderBy('name'),
-        'name_desc' => $query->orderBy('name', 'desc'),
-        'most_websites' => $query->orderByDesc('websites_count'),
-        'fewest_websites' => $query->orderBy('websites_count'),
-        'most_groups' => $query->orderByDesc('groups_count'),
-        'fewest_groups' => $query->orderBy('groups_count'),
-        default => $query->latest(),
-    };
-
-    return $query->paginate(12);
-});
+$tags = computed(fn () => Tag::visibleToUser(auth()->user())
+    ->withUserScopedCounts(auth()->user())
+    ->search($this->search)
+    ->sorted($this->sortBy)
+    ->paginate(12));
 
 $resetFilters = function () {
     $this->reset(['search', 'sortBy']);
