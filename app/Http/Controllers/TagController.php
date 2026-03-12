@@ -104,8 +104,8 @@ class TagController extends Controller
     private function validateRequest(Request $request)
     {
         return $request->validate([
-            'name' => 'required|string|max:255',
-            'color' => 'sometimes|string|size:7|regex:/^#[0-9A-Fa-f]{6}$/',
+            'name' => ['required', 'string', 'max:255'],
+            'color' => ['sometimes', 'string', 'size:7', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ]);
     }
 
